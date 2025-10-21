@@ -1,9 +1,9 @@
 use num_bigint::{BigUint, RandBigInt};
-use rand::thread_rng;
+use rand::rngs::OsRng;
 
 fn generate_numbers() -> (BigUint, BigUint) {
 
-    let mut rng = thread_rng();
+    let mut rng = OsRng;
     
     // set lower and upper bounds 
 
