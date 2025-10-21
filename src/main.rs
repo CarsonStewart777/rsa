@@ -1,7 +1,7 @@
 use num_bigint::{BigUint, RandBigInt};
 use rand::thread_rng;
 
-fn generate_numbers() {
+fn generate_numbers() -> (BigUint, BigUint) {
 
     let mut rng = thread_rng();
     
@@ -25,9 +25,7 @@ fn generate_numbers() {
     }
 
     
-    
-
-    println!("Random odd 1024-bit 1: {}\n\n Random odd 1024-bit 2: {}", num1, num2);
+    (num1, num2)
 
 
 
@@ -36,10 +34,15 @@ fn generate_numbers() {
 
 }
 
-fn check_prime() {
+fn check_prime(num1: &BigUint, num2: &BigUint) {
+
+    println!("num1 : {}", num1);
+    println!("num2 : {}", num2);
+
     
 }
 
 fn main() {
-generate_numbers();
+let (num1, num2) = generate_numbers();
+check_prime(&num1, &num2);
 }
