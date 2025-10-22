@@ -2,65 +2,35 @@ use num_bigint::{BigUint, RandBigInt};
 use rand::rngs::OsRng;
 use num_traits::One;
 
-fn generate_numbers() -> (BigUint, BigUint) {
-
-    let mut rng = OsRng;
-
-    // set lower and upper bounds
-
-    let  lower = BigUint::from(1u64) << 1023;
-    let upper = (BigUint::from(1u64) << 1024) - 1u32;
-
-    // generate odd num1
-
-    let mut num1 = rng.gen_biguint_range(&lower, &upper);
-    while &num1 % 2u32 == BigUint::from(0u32) {
-        num1 = rng.gen_biguint_range(&lower, &upper);
-    }
-
-    // generate odd num2
-
-    let mut num2 = rng.gen_biguint_range(&lower, &upper);
-    while &num2 % 2u32 == BigUint::from(0u32) {
-        num2 = rng.gen_biguint_range(&lower, &upper);
-    }
-
-
-    (num1, num2)
-
-
-
-
-
-
-}
-
 fn check_prime(n: &BigUint) -> bool {
+    // Handle small numbers and even numbers
+    if *n <= BigUint::from(3u32) {
+        return *n == BigUint::from(2u32) || *n == BigUint::from(3u32);
+    }
+    if n % 2u32 == BigUint::from(0u32) {
+        return false;
+    }
 
     // get s and d
-
     let n_minus_1 = n - BigUint::one();
     let s = n_minus_1.trailing_zeros().unwrap_or(0);
     let d = &n_minus_1 >> s;
     let mut rng = OsRng;
 
     // generate a 64 times
-
     for _ in 0..64 {
         let a = rng.gen_biguint_range(&BigUint::from(2u32), &n_minus_1);
 
         // find x using our values
-
         let mut x = a.modpow(&d, n);
         if x == BigUint::from(1u32) || x == n_minus_1 {
-            continue
+            continue;
         } else {
-            for _ in 0..(s-1) {
+            for _ in 0..(s - 1) {
                 x = x.modpow(&BigUint::from(2u32), n);
                 if x == BigUint::from(1u32) {
                     return false;
-                }
-                else if x == n_minus_1 {
+                } else if x == n_minus_1 {
                     break;
                 }
             }
@@ -72,8 +42,58 @@ fn check_prime(n: &BigUint) -> bool {
     return true;
 }
 
+fn generate_numbers() -> (BigUint, BigUint) {
+    let mut rng = OsRng;
+
+    // set lower and upper bounds
+    let lower = BigUint::from(1u64) << 1023;
+    let upper = (BigUint::from(1u64) << 1024) - 1u32;
+
+    println!("Finding first prime (p)...");
+    let mut num1;
+    loop {
+        num1 = rng.gen_biguint_range(&lower, &upper);
+        if &num1 % 2u32 == BigUint::from(0u32) {
+            num1 += BigUint::one();
+            if num1 >= upper {
+                continue;
+            }
+        }
+        
+        if check_prime(&num1) {
+            break;
+        }
+    }
+    println!("Found p!");
+
+    println!("Finding second prime (q)...");
+    let mut num2;
+    loop {
+        num2 = rng.gen_biguint_range(&lower, &upper);
+        if &num2 % 2u32 == BigUint::from(0u32) {
+            num2 += BigUint::one();
+            if num2 >= upper {
+                continue;
+            }
+        }
+        
+        if num1 != num2 && check_prime(&num2) {
+            break;
+        }
+    }
+    println!("Found q!");
+
+    (num1, num2)
+}
+
 fn main() {
     let (num1, num2) = generate_numbers();
-    let _ = check_prime(&num1);
-    let _ = check_prime(&num2);
+    let res1 = check_prime(&num1);
+    println!("Testing num1: {}", num1);
+    println!("Result: {}", if res1 { "Probably Prime" } else { "Composite!" });
+    let res2 = check_prime(&num2);
+    println!("\nTesting num2: {}", num2);
+    println!("Result: {}", if res2 { "Probably Prime" } else { "Composite!" });
 }
+
+

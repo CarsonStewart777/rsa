@@ -122,6 +122,7 @@ name = "rsa"
 version = "0.1.0"
 dependencies = [
  "num-bigint",
+ "num-traits",
  "rand",
 ]
 
