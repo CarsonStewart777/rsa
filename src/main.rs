@@ -1,7 +1,7 @@
 
 mod primes;
 use primes::SMALL_PRIMES;
-use num_bigint::{BigUint, RandBigInt};
+use num_bigint::{BigUint, RandBigInt,};
 use rand::rngs::OsRng;
 use num_traits::One;
 
@@ -141,6 +141,18 @@ pub fn generate_public(e: &BigUint, n: &BigUint) -> PublicKey {
 
 }
 
+pub fn generate_private(e: &BigUint, phi: &BigUint, n: &BigUint) -> PrivateKey {
+    
+let d = e.modinv(&phi).unwrap();
+
+PrivateKey {
+    
+    d: d.clone(),
+    n: n.clone(),
+    
+}
+
+}
 
 
 
@@ -159,6 +171,8 @@ fn main() {
     println!("\n The Totient (phi) is: {}", phi);
     let e = BigUint::from(65537u32);
     let public_key = generate_public(&e, &n);
-    println!("\nPublic Key generated: e: {}\n n: {}", public_key.e, public_key.n);
+    println!("\nPublic Key Generated: e: {}\n n: {}", public_key.e, public_key.n);
+    let private_key = generate_private(&e, &phi, &n);
+    println!("\nPrivate Key Generated: d: {}\n n: {}", private_key.d, private_key.n);
 }
 
