@@ -20,7 +20,6 @@ pub struct PrivateKey {
 fn fails_trial_division (n: &BigUint) -> bool {
 
     for &prime in SMALL_PRIMES {
-        // The prime from the list is a u32, so we just use it directly
         if n % prime == BigUint::zero() {
             return true;
         } 
