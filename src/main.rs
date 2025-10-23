@@ -106,6 +106,18 @@ fn generate_numbers() -> (BigUint, BigUint) {
     (num1, num2)
 }
 
+
+fn generate_keys(p: &BigUint, q: &BigUint) -> (BigUint, BigUint) {
+
+
+    let n = p * q;
+    let phi = (p - BigUint::from(1u32)) * (q - BigUint::from(1u32));
+
+    (n, phi) 
+
+
+
+}
 fn main() {
     let (num1, num2) = generate_numbers();
     let res1 = check_prime(&num1);
@@ -114,6 +126,7 @@ fn main() {
     let res2 = check_prime(&num2);
     println!("\nTesting num2: {}", num2);
     println!("Result: {}", if res2 { "Probably Prime" } else { "Composite!" });
+    let (n, phi) = generate_keys(&num1, &num2);
+    println!("\nThe Product of these primes is: {}", n);
+    println!("\n The Totien (phi) is: {}", phi)
 }
-
-
