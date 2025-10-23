@@ -1,6 +1,22 @@
+
+mod primes;
+use primes::SMALL_PRIMES;
 use num_bigint::{BigUint, RandBigInt};
 use rand::rngs::OsRng;
 use num_traits::One;
+
+fn fails_trial_division (n: &BigUint) -> bool {
+
+    for &prime in SMALL_PRIMES {
+
+        if n % prime == BigUint::from(0u32) {
+            return true;
+        } 
+        } return false;
+
+    }
+
+
 
 fn check_prime(n: &BigUint) -> bool {
     // Handle small numbers and even numbers
@@ -8,6 +24,10 @@ fn check_prime(n: &BigUint) -> bool {
         return *n == BigUint::from(2u32) || *n == BigUint::from(3u32);
     }
     if n % 2u32 == BigUint::from(0u32) {
+        return false;
+    }
+
+    if fails_trial_division(n) == true {
         return false;
     }
 
