@@ -5,6 +5,18 @@ use num_bigint::{BigUint, RandBigInt};
 use rand::rngs::OsRng;
 use num_traits::One;
 
+pub struct PublicKey {
+    pub e: BigUint,
+    pub n: BigUint,
+}
+
+pub struct PrivateKey {
+    pub d: BigUint,
+    pub n: BigUint,
+}
+
+
+
 fn fails_trial_division (n: &BigUint) -> bool {
 
     for &prime in SMALL_PRIMES {
@@ -107,7 +119,7 @@ fn generate_numbers() -> (BigUint, BigUint) {
 }
 
 
-fn generate_keys(p: &BigUint, q: &BigUint) -> (BigUint, BigUint) {
+fn calculate_mod_and_totient(p: &BigUint, q: &BigUint) -> (BigUint, BigUint) {
 
 
     let n = p * q;
@@ -118,6 +130,22 @@ fn generate_keys(p: &BigUint, q: &BigUint) -> (BigUint, BigUint) {
 
 
 }
+
+
+pub fn generate_public(e: &BigUint, n: &BigUint) -> PublicKey {
+
+    PublicKey {
+        e: e.clone(),
+        n: n.clone(),
+    }
+
+}
+
+
+
+
+
+
 fn main() {
     let (num1, num2) = generate_numbers();
     let res1 = check_prime(&num1);
@@ -126,7 +154,11 @@ fn main() {
     let res2 = check_prime(&num2);
     println!("\nTesting num2: {}", num2);
     println!("Result: {}", if res2 { "Probably Prime" } else { "Composite!" });
-    let (n, phi) = generate_keys(&num1, &num2);
+    let (n, phi) = calculate_mod_and_totient(&num1, &num2);
     println!("\nThe Product of these primes is: {}", n);
-    println!("\n The Totien (phi) is: {}", phi)
+    println!("\n The Totient (phi) is: {}", phi);
+    let e = BigUint::from(65537u32);
+    let public_key = generate_public(&e, &n);
+    println!("\nPublic Key generated: e: {}\n n: {}", public_key.e, public_key.n);
 }
+
